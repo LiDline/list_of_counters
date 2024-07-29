@@ -16,9 +16,25 @@ export type Meter = {
   initial_values: number[];
 };
 
+export type Area = {
+  id: string;
+  number: number;
+  str_number: string;
+  str_number_full: string;
+  house: {
+    address: string;
+    id: string;
+    fias_addrobjs: string[];
+  };
+};
+
 export type Meters = {
   count: number;
   next: string;
   previous: string;
   result: Meter[];
+};
+
+export type Areas = Omit<Meters, 'result'> & {
+  result: Area[];
 };

@@ -38,3 +38,5 @@ export type Meters = {
 export type Areas = Omit<Meters, 'result'> & {
   result: Area[];
 };
+
+export type GetParam = Record<'limit' | 'offset', string>;

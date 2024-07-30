@@ -1,20 +1,7 @@
-export type MeterType = 'HotWaterAreaMeter' | 'ColdWaterAreaMeter';
+import { Instance } from 'mobx-state-tree';
+import { Meter } from '../models/meterModel';
 
-export type Meter = {
-  id: string;
-  _type: (MeterType | 'AreaMeter')[];
-  area: {
-    id: string;
-  };
-  is_automatic: boolean;
-  communication: string;
-  description: string;
-  serial_number: string;
-  installation_date: string;
-  brand_name: string;
-  model_name: string;
-  initial_values: number[];
-};
+export type MeterType = Instance<typeof Meter>;
 
 export type Area = {
   id: string;
@@ -32,7 +19,7 @@ export type Meters = {
   count: number;
   next: string;
   previous: string;
-  result: Meter[];
+  result: MeterType[];
 };
 
 export type Areas = Omit<Meters, 'result'> & {

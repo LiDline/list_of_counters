@@ -1,7 +1,17 @@
 import { Instance } from 'mobx-state-tree';
-import { Meter } from '../models/meterModel';
+import { MeterForTable } from '../models/meterModel';
 
-export type MeterType = Instance<typeof Meter>;
+export type MeterForTableType = Instance<typeof MeterForTable>;
+
+export type MeterType = Omit<MeterForTableType, 'area'> & {
+  area: {
+    id: string;
+  };
+  communication: string;
+  serial_number: string;
+  brand_name: string;
+  model_name: string;
+};
 
 export type Area = {
   id: string;
@@ -26,4 +36,9 @@ export type Areas = Omit<Meters, 'result'> & {
   result: Area[];
 };
 
-export type GetParam = Record<'limit' | 'offset', string>;
+export type GetParam = Record<string, string>;
+
+export interface GetMeters {
+  totalPage: number;
+  meters: MeterForTableType[];
+}

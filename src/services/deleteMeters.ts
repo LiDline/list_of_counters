@@ -1,16 +1,35 @@
-import { API_URL } from '../CONST';
-import { checkFetchError } from './checkFetchError';
+import type {
+  MeterForTableType,
+  Meters,
+} from '../interfaces/interfaces.inputData';
 
-export default async function deleteMeter(id: string) {
-  const options = {
-    method: 'DELETE',
-  };
+import getOffset from '../models/func/getOffset';
+import simpleDelete from './generalMethods/simpleDelete';
+import simpleGet from './generalMethods/simpleGet';
+import { API_URL, LIMIT } from '../CONST';
+import createNewMeters from './deleteMeters/createNewMeters';
 
-  const fullUrl = `${API_URL}/meters/:${id}`;
+export default async function deleteMeter(
+  id: string,
+  page: number,
+  meters: MeterForTableType[]
+): Promise<MeterForTableType[]> {
+  const offsetForNewMeter = getOffset(page) + LIMIT;
 
-  const response = await fetch(fullUrl, options);
+  const newMeterResponse = (await simpleGet(`${API_URL}/meters/`, {
+    limit: `${1}`,
+    offset: `${offsetForNewMeter}`,
+  })) as Meters;
 
-  const res = await checkFetchError(response);
+  await simpleDelete(`meters/:${id}`);
 
-  return res;
+  const metersWithoutDeleted = meters.filter((m, i) => m.id !== id);
+
+  if (!newMeterResponse.result.length) {
+    return metersWithoutDeleted;
+  }
+
+  const meterForTable = await createNewMeters(newMeterResponse, meters);
+
+  return [...metersWithoutDeleted, meterForTable];
 }

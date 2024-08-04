@@ -2,7 +2,7 @@ import type {
   Areas,
   GetParam,
   Meters,
-} from '../interfaces/interfaces.inputData';
+} from '../../interfaces/interfaces.inputData';
 
 import { checkFetchError } from './checkFetchError';
 

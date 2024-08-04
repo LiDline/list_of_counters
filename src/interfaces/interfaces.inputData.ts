@@ -3,10 +3,7 @@ import { MeterForTable } from '../models/meterModel';
 
 export type MeterForTableType = Instance<typeof MeterForTable>;
 
-export type MeterType = Omit<MeterForTableType, 'area'> & {
-  area: {
-    id: string;
-  };
+export type MeterType = MeterForTableType & {
   communication: string;
   serial_number: string;
   brand_name: string;
@@ -41,5 +38,4 @@ export type GetParam = Record<string, string>;
 export interface GetMeters {
   totalPage: number;
   meters: MeterForTableType[];
-  areasId: string[];
 }

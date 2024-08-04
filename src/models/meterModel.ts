@@ -8,7 +8,10 @@ export const MeterForTable = types.model('Meter', {
       types.literal('AreaMeter')
     )
   ),
-  area: types.string,
+  area: types.model({
+    name: types.string,
+    id: types.optional(types.string, ''),
+  }),
   is_automatic: types.boolean,
   description: types.string,
   installation_date: types.string,

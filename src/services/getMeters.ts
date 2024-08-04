@@ -5,8 +5,10 @@ import type {
 } from '../interfaces/interfaces.inputData';
 
 import { API_URL, LIMIT } from '../CONST';
-import simpleGet from './simpleGet';
+
 import getAddress from './getAddress';
+import simpleGet from './generalMethods/simpleGet';
+import { createMeterForTable } from './generalMethods/utils';
 
 export default async function getMeters(
   offset = 0,
@@ -24,26 +26,14 @@ export default async function getMeters(
   const areas = await getAddress(areasId);
 
   const meters: MeterForTableType[] = result.map((m) => {
-    const area =
-      areas.result.filter((as) => as.id === m.area.id)[0] ?? 'Нет адреса';
+    const area = areas.result.filter((as) => as.id === m.area.id)[0];
 
-    const {
-      communication,
-      serial_number,
-      brand_name,
-      model_name,
-      ...needReturn
-    } = m;
-
-    const res = {
-      ...needReturn,
-      area: area.house.address + ', ' + area.str_number_full,
-    };
+    const res = createMeterForTable(m, area);
 
     return res;
   });
 
   const totalPage = Math.ceil(count / LIMIT);
 
-  return { totalPage, meters, areasId };
+  return { totalPage, meters };
 }

@@ -8,9 +8,12 @@ import { API_URL, LIMIT } from '../CONST';
 import simpleGet from './simpleGet';
 import getAddress from './getAddress';
 
-export default async function getMeters(offset = 0): Promise<GetMeters> {
+export default async function getMeters(
+  offset = 0,
+  limit = LIMIT
+): Promise<GetMeters> {
   const metersResponse = (await simpleGet(`${API_URL}/meters/`, {
-    limit: `${LIMIT}`,
+    limit: `${limit}`,
     offset: `${offset}`,
   })) as Meters;
 
@@ -20,7 +23,7 @@ export default async function getMeters(offset = 0): Promise<GetMeters> {
 
   const areas = await getAddress(areasId);
 
-  const meters = result.forEach((m) => {
+  const meters: MeterForTableType[] = result.map((m) => {
     const area =
       areas.result.filter((as) => as.id === m.area.id)[0] ?? 'Нет адреса';
 
@@ -32,13 +35,15 @@ export default async function getMeters(offset = 0): Promise<GetMeters> {
       ...needReturn
     } = m;
 
-    return {
-      needReturn,
+    const res = {
+      ...needReturn,
       area: area.house.address + ', ' + area.str_number_full,
-    } as MeterForTableType;
+    };
+
+    return res;
   });
 
   const totalPage = Math.ceil(count / LIMIT);
 
-  return { totalPage, meters };
+  return { totalPage, meters, areasId };
 }

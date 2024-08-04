@@ -41,4 +41,5 @@ export type GetParam = Record<string, string>;
 export interface GetMeters {
   totalPage: number;
   meters: MeterForTableType[];
+  areasId: string[];
 }
